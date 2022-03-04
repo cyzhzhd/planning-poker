@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option go_package = "poker/proto";
+
+package poker;
+
+service PokerService {
+  rpc Card(stream CardRequest) returns (stream CardResponse) {};
+}
+
+message CardRequest {
+  string uid = 1;
+  int32 score = 2;
+}
+
+message CardResponse {
+  string uid = 1;
+  int32 score = 2;
+}
