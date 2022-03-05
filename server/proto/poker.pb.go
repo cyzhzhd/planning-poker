@@ -9,6 +9,7 @@ package proto
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 )
@@ -20,18 +21,16 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type CardRequest struct {
+type InitiateRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Uid      string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
-	UserName string `protobuf:"bytes,2,opt,name=userName,proto3" json:"userName,omitempty"`
-	Score    int32  `protobuf:"varint,3,opt,name=score,proto3" json:"score,omitempty"`
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 }
 
-func (x *CardRequest) Reset() {
-	*x = CardRequest{}
+func (x *InitiateRequest) Reset() {
+	*x = InitiateRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_poker_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -39,13 +38,13 @@ func (x *CardRequest) Reset() {
 	}
 }
 
-func (x *CardRequest) String() string {
+func (x *InitiateRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CardRequest) ProtoMessage() {}
+func (*InitiateRequest) ProtoMessage() {}
 
-func (x *CardRequest) ProtoReflect() protoreflect.Message {
+func (x *InitiateRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_poker_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -57,44 +56,28 @@ func (x *CardRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CardRequest.ProtoReflect.Descriptor instead.
-func (*CardRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use InitiateRequest.ProtoReflect.Descriptor instead.
+func (*InitiateRequest) Descriptor() ([]byte, []int) {
 	return file_proto_poker_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *CardRequest) GetUid() string {
+func (x *InitiateRequest) GetName() string {
 	if x != nil {
-		return x.Uid
+		return x.Name
 	}
 	return ""
 }
 
-func (x *CardRequest) GetUserName() string {
-	if x != nil {
-		return x.UserName
-	}
-	return ""
-}
-
-func (x *CardRequest) GetScore() int32 {
-	if x != nil {
-		return x.Score
-	}
-	return 0
-}
-
-type CardResponse struct {
+type InitiateResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Uid      string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
-	UserName string `protobuf:"bytes,2,opt,name=userName,proto3" json:"userName,omitempty"`
-	Score    int32  `protobuf:"varint,3,opt,name=score,proto3" json:"score,omitempty"`
+	Uid string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
 }
 
-func (x *CardResponse) Reset() {
-	*x = CardResponse{}
+func (x *InitiateResponse) Reset() {
+	*x = InitiateResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_poker_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -102,13 +85,13 @@ func (x *CardResponse) Reset() {
 	}
 }
 
-func (x *CardResponse) String() string {
+func (x *InitiateResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CardResponse) ProtoMessage() {}
+func (*InitiateResponse) ProtoMessage() {}
 
-func (x *CardResponse) ProtoReflect() protoreflect.Message {
+func (x *InitiateResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_poker_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -120,54 +103,271 @@ func (x *CardResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CardResponse.ProtoReflect.Descriptor instead.
-func (*CardResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use InitiateResponse.ProtoReflect.Descriptor instead.
+func (*InitiateResponse) Descriptor() ([]byte, []int) {
 	return file_proto_poker_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *CardResponse) GetUid() string {
+func (x *InitiateResponse) GetUid() string {
 	if x != nil {
 		return x.Uid
 	}
 	return ""
 }
 
-func (x *CardResponse) GetUserName() string {
+type StreamRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Uid string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
+}
+
+func (x *StreamRequest) Reset() {
+	*x = StreamRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_poker_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *StreamRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StreamRequest) ProtoMessage() {}
+
+func (x *StreamRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_poker_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use StreamRequest.ProtoReflect.Descriptor instead.
+func (*StreamRequest) Descriptor() ([]byte, []int) {
+	return file_proto_poker_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *StreamRequest) GetUid() string {
+	if x != nil {
+		return x.Uid
+	}
+	return ""
+}
+
+type Card struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Uid      string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
+	UserName string `protobuf:"bytes,2,opt,name=userName,proto3" json:"userName,omitempty"`
+	Score    int32  `protobuf:"varint,3,opt,name=score,proto3" json:"score,omitempty"`
+}
+
+func (x *Card) Reset() {
+	*x = Card{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_poker_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Card) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Card) ProtoMessage() {}
+
+func (x *Card) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_poker_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Card.ProtoReflect.Descriptor instead.
+func (*Card) Descriptor() ([]byte, []int) {
+	return file_proto_poker_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *Card) GetUid() string {
+	if x != nil {
+		return x.Uid
+	}
+	return ""
+}
+
+func (x *Card) GetUserName() string {
 	if x != nil {
 		return x.UserName
 	}
 	return ""
 }
 
-func (x *CardResponse) GetScore() int32 {
+func (x *Card) GetScore() int32 {
 	if x != nil {
 		return x.Score
 	}
 	return 0
 }
 
+type User struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id   int32  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+}
+
+func (x *User) Reset() {
+	*x = User{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_poker_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *User) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*User) ProtoMessage() {}
+
+func (x *User) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_poker_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use User.ProtoReflect.Descriptor instead.
+func (*User) Descriptor() ([]byte, []int) {
+	return file_proto_poker_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *User) GetId() int32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *User) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+type UserResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Users []*User `protobuf:"bytes,1,rep,name=users,proto3" json:"users,omitempty"`
+}
+
+func (x *UserResponse) Reset() {
+	*x = UserResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_poker_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *UserResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserResponse) ProtoMessage() {}
+
+func (x *UserResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_poker_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserResponse.ProtoReflect.Descriptor instead.
+func (*UserResponse) Descriptor() ([]byte, []int) {
+	return file_proto_poker_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *UserResponse) GetUsers() []*User {
+	if x != nil {
+		return x.Users
+	}
+	return nil
+}
+
 var File_proto_poker_proto protoreflect.FileDescriptor
 
 var file_proto_poker_proto_rawDesc = []byte{
 	0x0a, 0x11, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x70, 0x6f, 0x6b, 0x65, 0x72, 0x2e, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x12, 0x05, 0x70, 0x6f, 0x6b, 0x65, 0x72, 0x22, 0x51, 0x0a, 0x0b, 0x43, 0x61,
-	0x72, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x75, 0x69, 0x64,
-	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x75, 0x69, 0x64, 0x12, 0x1a, 0x0a, 0x08, 0x75,
-	0x73, 0x65, 0x72, 0x4e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x75,
-	0x73, 0x65, 0x72, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x73, 0x63, 0x6f, 0x72, 0x65,
-	0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x22, 0x52, 0x0a,
-	0x0c, 0x43, 0x61, 0x72, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x10, 0x0a,
-	0x03, 0x75, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x75, 0x69, 0x64, 0x12,
-	0x1a, 0x0a, 0x08, 0x75, 0x73, 0x65, 0x72, 0x4e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x08, 0x75, 0x73, 0x65, 0x72, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x73,
-	0x63, 0x6f, 0x72, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x05, 0x73, 0x63, 0x6f, 0x72,
-	0x65, 0x32, 0x49, 0x0a, 0x0c, 0x50, 0x6f, 0x6b, 0x65, 0x72, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63,
-	0x65, 0x12, 0x39, 0x0a, 0x0a, 0x43, 0x61, 0x72, 0x64, 0x53, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x12,
-	0x12, 0x2e, 0x70, 0x6f, 0x6b, 0x65, 0x72, 0x2e, 0x43, 0x61, 0x72, 0x64, 0x52, 0x65, 0x71, 0x75,
-	0x65, 0x73, 0x74, 0x1a, 0x13, 0x2e, 0x70, 0x6f, 0x6b, 0x65, 0x72, 0x2e, 0x43, 0x61, 0x72, 0x64,
-	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x30, 0x01, 0x42, 0x0d, 0x5a, 0x0b,
-	0x70, 0x6f, 0x6b, 0x65, 0x72, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x33,
+	0x6f, 0x74, 0x6f, 0x12, 0x05, 0x70, 0x6f, 0x6b, 0x65, 0x72, 0x1a, 0x1b, 0x67, 0x6f, 0x6f, 0x67,
+	0x6c, 0x65, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2f, 0x65, 0x6d, 0x70, 0x74,
+	0x79, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x25, 0x0a, 0x0f, 0x49, 0x6e, 0x69, 0x74, 0x69,
+	0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61,
+	0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0x24,
+	0x0a, 0x10, 0x49, 0x6e, 0x69, 0x74, 0x69, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x75, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x03, 0x75, 0x69, 0x64, 0x22, 0x21, 0x0a, 0x0d, 0x53, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x75, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x03, 0x75, 0x69, 0x64, 0x22, 0x4a, 0x0a, 0x04, 0x43, 0x61, 0x72, 0x64, 0x12,
+	0x10, 0x0a, 0x03, 0x75, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x75, 0x69,
+	0x64, 0x12, 0x1a, 0x0a, 0x08, 0x75, 0x73, 0x65, 0x72, 0x4e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x08, 0x75, 0x73, 0x65, 0x72, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x14, 0x0a,
+	0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x05, 0x73, 0x63,
+	0x6f, 0x72, 0x65, 0x22, 0x2a, 0x0a, 0x04, 0x55, 0x73, 0x65, 0x72, 0x12, 0x0e, 0x0a, 0x02, 0x69,
+	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x02, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e,
+	0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x22,
+	0x31, 0x0a, 0x0c, 0x55, 0x73, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
+	0x21, 0x0a, 0x05, 0x75, 0x73, 0x65, 0x72, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0b,
+	0x2e, 0x70, 0x6f, 0x6b, 0x65, 0x72, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x52, 0x05, 0x75, 0x73, 0x65,
+	0x72, 0x73, 0x32, 0xf2, 0x01, 0x0a, 0x0c, 0x50, 0x6f, 0x6b, 0x65, 0x72, 0x53, 0x65, 0x72, 0x76,
+	0x69, 0x63, 0x65, 0x12, 0x3d, 0x0a, 0x08, 0x4a, 0x6f, 0x69, 0x6e, 0x47, 0x61, 0x6d, 0x65, 0x12,
+	0x16, 0x2e, 0x70, 0x6f, 0x6b, 0x65, 0x72, 0x2e, 0x49, 0x6e, 0x69, 0x74, 0x69, 0x61, 0x74, 0x65,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x17, 0x2e, 0x70, 0x6f, 0x6b, 0x65, 0x72, 0x2e,
+	0x49, 0x6e, 0x69, 0x74, 0x69, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x22, 0x00, 0x12, 0x31, 0x0a, 0x08, 0x53, 0x65, 0x6e, 0x64, 0x43, 0x61, 0x72, 0x64, 0x12, 0x0b,
+	0x2e, 0x70, 0x6f, 0x6b, 0x65, 0x72, 0x2e, 0x43, 0x61, 0x72, 0x64, 0x1a, 0x16, 0x2e, 0x67, 0x6f,
+	0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d,
+	0x70, 0x74, 0x79, 0x22, 0x00, 0x12, 0x3b, 0x0a, 0x0a, 0x55, 0x73, 0x65, 0x72, 0x53, 0x74, 0x72,
+	0x65, 0x61, 0x6d, 0x12, 0x14, 0x2e, 0x70, 0x6f, 0x6b, 0x65, 0x72, 0x2e, 0x53, 0x74, 0x72, 0x65,
+	0x61, 0x6d, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x13, 0x2e, 0x70, 0x6f, 0x6b, 0x65,
+	0x72, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00,
+	0x30, 0x01, 0x12, 0x33, 0x0a, 0x0a, 0x43, 0x61, 0x72, 0x64, 0x53, 0x74, 0x72, 0x65, 0x61, 0x6d,
+	0x12, 0x14, 0x2e, 0x70, 0x6f, 0x6b, 0x65, 0x72, 0x2e, 0x53, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x0b, 0x2e, 0x70, 0x6f, 0x6b, 0x65, 0x72, 0x2e, 0x43,
+	0x61, 0x72, 0x64, 0x22, 0x00, 0x30, 0x01, 0x42, 0x0d, 0x5a, 0x0b, 0x70, 0x6f, 0x6b, 0x65, 0x72,
+	0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -182,19 +382,31 @@ func file_proto_poker_proto_rawDescGZIP() []byte {
 	return file_proto_poker_proto_rawDescData
 }
 
-var file_proto_poker_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_proto_poker_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_proto_poker_proto_goTypes = []interface{}{
-	(*CardRequest)(nil),  // 0: poker.CardRequest
-	(*CardResponse)(nil), // 1: poker.CardResponse
+	(*InitiateRequest)(nil),  // 0: poker.InitiateRequest
+	(*InitiateResponse)(nil), // 1: poker.InitiateResponse
+	(*StreamRequest)(nil),    // 2: poker.StreamRequest
+	(*Card)(nil),             // 3: poker.Card
+	(*User)(nil),             // 4: poker.User
+	(*UserResponse)(nil),     // 5: poker.UserResponse
+	(*emptypb.Empty)(nil),    // 6: google.protobuf.Empty
 }
 var file_proto_poker_proto_depIdxs = []int32{
-	0, // 0: poker.PokerService.CardStream:input_type -> poker.CardRequest
-	1, // 1: poker.PokerService.CardStream:output_type -> poker.CardResponse
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	4, // 0: poker.UserResponse.users:type_name -> poker.User
+	0, // 1: poker.PokerService.JoinGame:input_type -> poker.InitiateRequest
+	3, // 2: poker.PokerService.SendCard:input_type -> poker.Card
+	2, // 3: poker.PokerService.UserStream:input_type -> poker.StreamRequest
+	2, // 4: poker.PokerService.CardStream:input_type -> poker.StreamRequest
+	1, // 5: poker.PokerService.JoinGame:output_type -> poker.InitiateResponse
+	6, // 6: poker.PokerService.SendCard:output_type -> google.protobuf.Empty
+	5, // 7: poker.PokerService.UserStream:output_type -> poker.UserResponse
+	3, // 8: poker.PokerService.CardStream:output_type -> poker.Card
+	5, // [5:9] is the sub-list for method output_type
+	1, // [1:5] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_proto_poker_proto_init() }
@@ -204,7 +416,7 @@ func file_proto_poker_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_proto_poker_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CardRequest); i {
+			switch v := v.(*InitiateRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -216,7 +428,55 @@ func file_proto_poker_proto_init() {
 			}
 		}
 		file_proto_poker_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CardResponse); i {
+			switch v := v.(*InitiateResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto_poker_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*StreamRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto_poker_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Card); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto_poker_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*User); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto_poker_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UserResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -234,7 +494,7 @@ func file_proto_poker_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_proto_poker_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

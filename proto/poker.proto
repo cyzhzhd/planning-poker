@@ -1,21 +1,39 @@
 syntax = "proto3";
+import "google/protobuf/empty.proto";
 
 option go_package = "poker/proto";
 
 package poker;
 
 service PokerService {
-  rpc CardStream(CardRequest) returns (stream CardResponse) {};
+  rpc JoinGame(InitiateRequest) returns (InitiateResponse) {};
+  rpc SendCard(Card) returns (google.protobuf.Empty) {};
+  rpc UserStream(StreamRequest) returns (stream UserResponse) {};
+  rpc CardStream(StreamRequest) returns (stream Card) {};
 }
 
-message CardRequest {
+message InitiateRequest {
+  string name = 1;
+}
+message InitiateResponse {
+  string uid = 1;
+}
+
+message StreamRequest {
+  string uid = 1;
+}
+
+message Card {
   string uid = 1;
   string userName = 2;
   int32 score = 3;
 }
 
-message CardResponse {
-  string uid = 1;
-  string userName = 2;
-  int32 score = 3;
+message User {
+  int32 id = 1;
+  string name = 2;
 }
+message UserResponse {
+  repeated User users = 1;
+}
+
