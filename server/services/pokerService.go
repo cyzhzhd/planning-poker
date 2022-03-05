@@ -12,7 +12,7 @@ type PokerServer struct {
 	pb.UnimplementedPokerServiceServer
 }
 
-func (s *PokerServer) Card(pb.PokerService_CardServer) error {
+func (s *PokerServer) CardStream(req *pb.CardRequest, stream pb.PokerService_CardStreamServer) error {
 	uid, err := gonanoid.New()
 	if err != nil {
 		log.Println("nanoid error", err)

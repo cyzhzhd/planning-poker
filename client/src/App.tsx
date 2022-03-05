@@ -10,7 +10,7 @@ const App: FC = () => {
     req.setUid('132');
     req.setScore(3);
 
-    const cardStream = client.card(req, {});
+    const cardStream = client.cardStream(req, {});
     cardStream.on('data', (chunk: CardResponse) => {
       const msg = chunk.toObject();
       console.log(msg);

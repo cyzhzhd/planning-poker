@@ -5,15 +5,17 @@ option go_package = "poker/proto";
 package poker;
 
 service PokerService {
-  rpc Card(stream CardRequest) returns (stream CardResponse) {};
+  rpc CardStream(CardRequest) returns (stream CardResponse) {};
 }
 
 message CardRequest {
   string uid = 1;
-  int32 score = 2;
+  string userName = 2;
+  int32 score = 3;
 }
 
 message CardResponse {
   string uid = 1;
-  int32 score = 2;
+  string userName = 2;
+  int32 score = 3;
 }
