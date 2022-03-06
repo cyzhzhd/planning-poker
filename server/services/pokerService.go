@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"sync"
@@ -76,7 +77,11 @@ func (s *PokerServer) UserStream(req *pb.StreamRequest, stream pb.PokerService_U
 	<-stream.Context().Done()
 	fmt.Println("connect done")
 	delete(s.UserStreams, req.Uid)
-	s.users = RemoveIndex(s.users, findUserindex(req.Uid, s.users))
+	idx := findUserindex(req.Uid, s.users)
+	if idx == -1 {
+		return errors.New("user was not connected")
+	}
+	s.users = RemoveIndex(s.users, idx)
 	for _, stream := range s.UserStreams {
 		if err := stream.Send(&pb.UserResponse{Users: s.users}); err != nil {
 			return err
