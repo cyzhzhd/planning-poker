@@ -1,11 +1,12 @@
-import { StreamRequest, Card, UserResponse, User } from '../proto/poker_pb';
-import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { StreamRequest, Card, UserResponse } from '../proto/poker_pb';
+import { useEffect } from 'react';
 import client from '../helpers/client';
 import { useUserState } from '../states/user/UserHooks';
-import { useNavigate } from 'react-router-dom';
+import { updatePokerUsers } from '../states/poker/PokerActions';
+import { usePokerDispatch } from '../states/poker/PokerHooks';
 
 const usePokerRoom = () => {
-  const [users, setUsers] = useState<User.AsObject[]>([]);
   const user = useUserState();
   const navigate = useNavigate();
   useEffect(() => {
@@ -14,6 +15,7 @@ const usePokerRoom = () => {
     }
   }, [navigate, user]);
 
+  const pokerDispatch = usePokerDispatch();
   useEffect(() => {
     if (user.id === '') {
       return;
@@ -26,8 +28,8 @@ const usePokerRoom = () => {
     const userStream = client.userStream(req, {});
     userStream.on('data', (chunk: UserResponse) => {
       const msg = chunk.toObject();
-      console.log('user', msg.usersList);
-      setUsers(msg.usersList);
+      console.log('userStream', msg.usersList);
+      updatePokerUsers(pokerDispatch, msg.usersList);
     });
 
     const cardStream = client.cardStream(req, {});
@@ -35,9 +37,7 @@ const usePokerRoom = () => {
       const msg = chunk.toObject();
       console.log('card', msg);
     });
-  }, [user]);
-
-  return users;
+  }, [pokerDispatch, user]);
 };
 
 export default usePokerRoom;

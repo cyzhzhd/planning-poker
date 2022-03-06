@@ -6,7 +6,7 @@ export enum ActionTypes {
 
 export interface UserAction {
   type: ActionTypes.UPDATE_USER;
-  user: {
+  user?: {
     id: string;
     name: string;
   };
@@ -21,7 +21,8 @@ export const reducer = (state = initialState, action: UserAction) => {
   switch (action.type) {
     case ActionTypes.UPDATE_USER: {
       return {
-        ...action.user,
+        id: action.user?.id ?? '',
+        name: action.user?.name ?? '',
       };
     }
     default: {

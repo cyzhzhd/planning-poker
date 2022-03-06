@@ -1,10 +1,13 @@
 import React, { FC } from 'react';
 import usePokerRoom from '../models/usePokerRoom';
+import { usePokerState } from '../states/poker/PokerHooks';
 import { useUserState } from '../states/user/UserHooks';
 
 const PokerRoom: FC = () => {
   const user = useUserState();
-  const users = usePokerRoom();
+  usePokerRoom();
+
+  const pokerState = usePokerState();
   return (
     <div>
       <h1>PokerRoom</h1>
@@ -13,10 +16,10 @@ const PokerRoom: FC = () => {
       </div>
       <div>
         <div>userlist</div>
-        {users.map((user) => {
+        {pokerState.users.map((user) => {
           return (
             <div key={user.id}>
-              {user.id}: {user.name}
+              {user.name}: {user.score ?? 'not yet selected'}
             </div>
           );
         })}
