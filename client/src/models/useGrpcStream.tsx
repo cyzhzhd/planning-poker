@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom';
 import { StreamRequest, Card, UserResponse } from '../proto/poker_pb';
 import { useEffect } from 'react';
 import client from '../helpers/client';
@@ -6,14 +5,8 @@ import { useUserState } from '../states/user/UserHooks';
 import { updatePokerUsers } from '../states/poker/PokerActions';
 import { usePokerDispatch } from '../states/poker/PokerHooks';
 
-const usePokerRoom = () => {
+const useGrpcStream = () => {
   const user = useUserState();
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (user.id === '') {
-      navigate('/login');
-    }
-  }, [navigate, user]);
 
   const pokerDispatch = usePokerDispatch();
   useEffect(() => {
@@ -40,4 +33,4 @@ const usePokerRoom = () => {
   }, [pokerDispatch, user]);
 };
 
-export default usePokerRoom;
+export default useGrpcStream;

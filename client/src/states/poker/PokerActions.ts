@@ -8,3 +8,9 @@ export const updatePokerUsers = (
 ): void => {
   dispatch({ users, type: ActionTypes.UPDATE_POKER_USERS });
 };
+export const updatePokerCard = (
+  dispatch: PokerDispatch,
+  card: number,
+): void => {
+  dispatch({ card, type: ActionTypes.UPDATE_POKER_CARD });
+};

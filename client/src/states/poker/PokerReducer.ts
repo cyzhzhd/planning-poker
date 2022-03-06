@@ -1,17 +1,20 @@
 import { User } from '../../proto/poker_pb';
-import { PokerUser, State } from './type';
+import { PokerUser, PokerState } from '../../types/interface';
 
 export enum ActionTypes {
   UPDATE_POKER_USERS = 'updatePokerUsers',
+  UPDATE_POKER_CARD = 'updatePokerCard',
 }
 
 export interface PokerAction {
-  type: ActionTypes.UPDATE_POKER_USERS;
+  type: ActionTypes.UPDATE_POKER_USERS | ActionTypes.UPDATE_POKER_CARD;
   users?: User.AsObject[];
+  card?: number;
 }
 
-export const initialState: State = {
+export const initialState: PokerState = {
   users: [],
+  card: null,
 };
 
 export const reducer = (state = initialState, action: PokerAction) => {
@@ -25,6 +28,12 @@ export const reducer = (state = initialState, action: PokerAction) => {
       return {
         ...state,
         users,
+      };
+    }
+    case ActionTypes.UPDATE_POKER_CARD: {
+      return {
+        ...state,
+        card: action.card as number,
       };
     }
     default: {

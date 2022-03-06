@@ -3,6 +3,7 @@ export interface PokerUser {
   name: string;
   score?: number;
 }
-export interface State {
+export interface PokerState {
   users: PokerUser[];
+  card: number | null;
 }
