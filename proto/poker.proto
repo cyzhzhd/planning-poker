@@ -26,12 +26,13 @@ message StreamRequest {
 message Card {
   string uid = 1;
   string userName = 2;
-  int32 score = 3;
+  int32 point = 3;
 }
 
 message User {
   string id = 1;
   string name = 2;
+  int32 point = 3;
 }
 message UserResponse {
   repeated User users = 1;

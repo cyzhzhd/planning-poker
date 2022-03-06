@@ -37,8 +37,9 @@ func (s *PokerServer) JoinGame(ctx context.Context, req *pb.InitiateRequest) (*p
 	return &pb.InitiateResponse{Uid: uid}, nil
 }
 func (s *PokerServer) SendCard(ctx context.Context, req *pb.Card) (*emptypb.Empty, error) {
+	fmt.Println("new card", req)
 	for _, stream := range s.CardStreams {
-		if err := stream.Send(&pb.Card{Uid: req.Uid, UserName: req.UserName, Score: req.Score}); err != nil {
+		if err := stream.Send(&pb.Card{Uid: req.Uid, UserName: req.UserName, Point: req.Point}); err != nil {
 			return &emptypb.Empty{}, err
 		}
 	}
@@ -75,13 +76,19 @@ func (s *PokerServer) UserStream(req *pb.StreamRequest, stream pb.PokerService_U
 
 	// wait until the connection disconnected
 	<-stream.Context().Done()
+	s.userStreamMu.Lock()
 	fmt.Println("connect done")
 	delete(s.UserStreams, req.Uid)
+	s.userStreamMu.Unlock()
+
+	s.usersMu.Lock()
 	idx := findUserindex(req.Uid, s.users)
 	if idx == -1 {
 		return errors.New("user was not connected")
 	}
 	s.users = RemoveIndex(s.users, idx)
+	s.usersMu.Unlock()
+
 	for _, stream := range s.UserStreams {
 		if err := stream.Send(&pb.UserResponse{Users: s.users}); err != nil {
 			return err
@@ -97,5 +104,8 @@ func (s *PokerServer) CardStream(req *pb.StreamRequest, stream pb.PokerService_C
 	s.cardStreamMu.Unlock()
 
 	<-stream.Context().Done()
+	s.cardStreamMu.Lock()
+	delete(s.CardStreams, req.Uid)
+	s.cardStreamMu.Unlock()
 	return nil
 }
