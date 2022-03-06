@@ -1,3 +1,4 @@
+import { DEFAULT_POINT } from '../../constant/constant';
 import { User } from '../../proto/poker_pb';
 
 export enum ActionTypes {
@@ -15,6 +16,7 @@ export interface UserAction {
 export const initialState: User.AsObject = {
   id: '',
   name: '',
+  point: DEFAULT_POINT,
 };
 
 export const reducer = (state = initialState, action: UserAction) => {
@@ -23,6 +25,7 @@ export const reducer = (state = initialState, action: UserAction) => {
       return {
         id: action.user?.id ?? '',
         name: action.user?.name ?? '',
+        point: DEFAULT_POINT,
       };
     }
     default: {

@@ -8,7 +8,7 @@ interface PokerCardProps {
 const PokerCard: FC<PokerCardProps> = ({ point }) => {
   const pokerState = usePokerState();
   return (
-    <CardWrapper selected={pokerState.card === point}>{point}</CardWrapper>
+    <CardWrapper selected={pokerState.point === point}>{point}</CardWrapper>
   );
 };
 

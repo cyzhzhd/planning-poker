@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { DEFAULT_POINT } from '../constant/constant';
 import client from '../helpers/client';
 import useInput from '../hooks/useInput';
 import { InitiateRequest } from '../proto/poker_pb';
@@ -23,7 +24,11 @@ const Login: FC = () => {
         return;
       }
 
-      updateUser(userDispatch, { id: response.getUid(), name });
+      updateUser(userDispatch, {
+        id: response.getUid(),
+        name,
+        point: DEFAULT_POINT,
+      });
       setName('');
       navigate('/poker-room');
     });

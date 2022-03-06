@@ -1,19 +1,17 @@
 import React, { FC } from 'react';
-import { updatePokerCard } from '../states/poker/PokerActions';
-import { usePokerDispatch } from '../states/poker/PokerHooks';
 import PokerCard from './PokerCard';
 import { CardListWrapper } from './PokerCardList.style';
 
 interface PokerCardListProps {
-  cards: number[];
+  points: number[];
   onClickHandler: (card: number) => void;
 }
-const PokerCardList: FC<PokerCardListProps> = ({ cards, onClickHandler }) => {
+const PokerCardList: FC<PokerCardListProps> = ({ points, onClickHandler }) => {
   return (
     <CardListWrapper>
-      {cards.map((card) => (
-        <li key={card} onClick={() => onClickHandler(card)}>
-          <PokerCard point={card} />
+      {points.map((point) => (
+        <li key={point} onClick={() => onClickHandler(point)}>
+          <PokerCard point={point} />
         </li>
       ))}
     </CardListWrapper>

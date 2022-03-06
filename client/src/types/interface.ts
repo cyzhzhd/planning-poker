@@ -1,9 +1,6 @@
-export interface PokerUser {
-  id: string;
-  name: string;
-  score?: number;
-}
+import { User } from '../proto/poker_pb';
+
 export interface PokerState {
-  users: PokerUser[];
-  card: number | null;
+  users: User.AsObject[];
+  point: number | null;
 }

@@ -64,8 +64,8 @@ export class Card extends jspb.Message {
   getUsername(): string;
   setUsername(value: string): Card;
 
-  getScore(): number;
-  setScore(value: number): Card;
+  getPoint(): number;
+  setPoint(value: number): Card;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Card.AsObject;
@@ -79,7 +79,7 @@ export namespace Card {
   export type AsObject = {
     uid: string,
     username: string,
-    score: number,
+    point: number,
   }
 }
 
@@ -89,6 +89,9 @@ export class User extends jspb.Message {
 
   getName(): string;
   setName(value: string): User;
+
+  getPoint(): number;
+  setPoint(value: number): User;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): User.AsObject;
@@ -102,6 +105,7 @@ export namespace User {
   export type AsObject = {
     id: string,
     name: string,
+    point: number,
   }
 }
 

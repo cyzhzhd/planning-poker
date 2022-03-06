@@ -579,7 +579,7 @@ proto.poker.Card.toObject = function(includeInstance, msg) {
   var f, obj = {
     uid: jspb.Message.getFieldWithDefault(msg, 1, ""),
     username: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    score: jspb.Message.getFieldWithDefault(msg, 3, 0)
+    point: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -626,7 +626,7 @@ proto.poker.Card.deserializeBinaryFromReader = function(msg, reader) {
       break;
     case 3:
       var value = /** @type {number} */ (reader.readInt32());
-      msg.setScore(value);
+      msg.setPoint(value);
       break;
     default:
       reader.skipField();
@@ -671,7 +671,7 @@ proto.poker.Card.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getScore();
+  f = message.getPoint();
   if (f !== 0) {
     writer.writeInt32(
       3,
@@ -718,10 +718,10 @@ proto.poker.Card.prototype.setUsername = function(value) {
 
 
 /**
- * optional int32 score = 3;
+ * optional int32 point = 3;
  * @return {number}
  */
-proto.poker.Card.prototype.getScore = function() {
+proto.poker.Card.prototype.getPoint = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
 };
 
@@ -730,7 +730,7 @@ proto.poker.Card.prototype.getScore = function() {
  * @param {number} value
  * @return {!proto.poker.Card} returns this
  */
-proto.poker.Card.prototype.setScore = function(value) {
+proto.poker.Card.prototype.setPoint = function(value) {
   return jspb.Message.setProto3IntField(this, 3, value);
 };
 
@@ -768,7 +768,8 @@ proto.poker.User.prototype.toObject = function(opt_includeInstance) {
 proto.poker.User.toObject = function(includeInstance, msg) {
   var f, obj = {
     id: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    name: jspb.Message.getFieldWithDefault(msg, 2, "")
+    name: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    point: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -813,6 +814,10 @@ proto.poker.User.deserializeBinaryFromReader = function(msg, reader) {
       var value = /** @type {string} */ (reader.readString());
       msg.setName(value);
       break;
+    case 3:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setPoint(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -856,6 +861,13 @@ proto.poker.User.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
+  f = message.getPoint();
+  if (f !== 0) {
+    writer.writeInt32(
+      3,
+      f
+    );
+  }
 };
 
 
@@ -892,6 +904,24 @@ proto.poker.User.prototype.getName = function() {
  */
 proto.poker.User.prototype.setName = function(value) {
   return jspb.Message.setProto3StringField(this, 2, value);
+};
+
+
+/**
+ * optional int32 point = 3;
+ * @return {number}
+ */
+proto.poker.User.prototype.getPoint = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.poker.User} returns this
+ */
+proto.poker.User.prototype.setPoint = function(value) {
+  return jspb.Message.setProto3IntField(this, 3, value);
 };
 
 

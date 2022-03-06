@@ -2,7 +2,7 @@ import { StreamRequest, Card, UserResponse } from '../proto/poker_pb';
 import { useEffect } from 'react';
 import client from '../helpers/client';
 import { useUserState } from '../states/user/UserHooks';
-import { updatePokerUsers } from '../states/poker/PokerActions';
+import { updatePokerUsers, updateUserCard } from '../states/poker/PokerActions';
 import { usePokerDispatch } from '../states/poker/PokerHooks';
 
 const useGrpcStream = () => {
@@ -27,8 +27,8 @@ const useGrpcStream = () => {
 
     const cardStream = client.cardStream(req, {});
     cardStream.on('data', (chunk: Card) => {
-      const msg = chunk.toObject();
-      console.log('card', msg);
+      const card = chunk.toObject();
+      updateUserCard(pokerDispatch, card);
     });
   }, [pokerDispatch, user]);
 };

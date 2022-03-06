@@ -4,6 +4,8 @@ import { useUserState } from '../states/user/UserHooks';
 import { updatePokerCard } from '../states/poker/PokerActions';
 import { usePokerDispatch, usePokerState } from '../states/poker/PokerHooks';
 import { PokerState } from '../types/interface';
+import client from '../helpers/client';
+import { Card } from '../proto/poker_pb';
 
 interface usePokerRoomReturnType {
   values: {
@@ -24,8 +26,17 @@ const usePokerRoom = (): usePokerRoomReturnType => {
 
   const pokerState = usePokerState();
   const pokerDispatch = usePokerDispatch();
+  const sendCard = (point: number) => {
+    const req = new Card();
+
+    req.setUid(user.id);
+    req.setPoint(point);
+    req.setUsername(user.name);
+    client.sendCard(req, {});
+  };
   const selectPokerCard = (card: number) => {
     updatePokerCard(pokerDispatch, card);
+    sendCard(card);
   };
 
   return {

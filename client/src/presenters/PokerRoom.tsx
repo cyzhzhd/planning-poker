@@ -12,6 +12,7 @@ const PokerRoom: FC = () => {
     operations: { selectPokerCard },
   } = usePokerRoom();
 
+  console.log(pokerState.users);
   return (
     <div>
       <h1>PokerRoom</h1>
@@ -23,13 +24,13 @@ const PokerRoom: FC = () => {
         {pokerState.users.map((user) => {
           return (
             <div key={user.id}>
-              {user.name}: {user.score ?? 'not yet selected'}
+              {user.name}: {user.point ?? 'not yet selected'}
             </div>
           );
         })}
       </div>
       <PokerCardList
-        cards={[0, 1, 2, 3, 5, 8, 13]}
+        points={[0, 1, 2, 3, 5, 8, 13]}
         onClickHandler={selectPokerCard}
       />
     </div>
