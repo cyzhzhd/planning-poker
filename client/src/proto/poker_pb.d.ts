@@ -84,8 +84,8 @@ export namespace Card {
 }
 
 export class User extends jspb.Message {
-  getId(): number;
-  setId(value: number): User;
+  getId(): string;
+  setId(value: string): User;
 
   getName(): string;
   setName(value: string): User;
@@ -100,7 +100,7 @@ export class User extends jspb.Message {
 
 export namespace User {
   export type AsObject = {
-    id: number,
+    id: string,
     name: string,
   }
 }
