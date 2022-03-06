@@ -1,17 +1,24 @@
-import { CardRequest, CardResponse } from '../proto/poker_pb';
-import { PokerServiceClient } from '../proto/PokerServiceClientPb';
+import { StreamRequest, Card } from '../proto/poker_pb';
 import { useEffect } from 'react';
+import client from '../helpers/client';
+import { useUserState } from '../states/user/UserHooks';
+import { useNavigate } from 'react-router-dom';
 
-const client = new PokerServiceClient('http://localhost:8080');
 const usePokerRoom = () => {
+  const user = useUserState();
+  const navigate = useNavigate();
   useEffect(() => {
-    const req = new CardRequest();
-    req.setUsername('ek');
+    if (user.id === '') {
+      navigate('/login');
+    }
+  }, [navigate, user]);
+
+  useEffect(() => {
+    const req = new StreamRequest();
     req.setUid('132');
-    req.setScore(3);
 
     const cardStream = client.cardStream(req, {});
-    cardStream.on('data', (chunk: CardResponse) => {
+    cardStream.on('data', (chunk: Card) => {
       const msg = chunk.toObject();
       console.log(msg);
     });
