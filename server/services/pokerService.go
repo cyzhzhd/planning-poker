@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"fmt"
 	"log"
 
@@ -21,4 +22,13 @@ func (s *PokerServer) CardStream(req *pb.StreamRequest, stream pb.PokerService_C
 
 	fmt.Println("new connection with uid", uid)
 	return <-errch
+}
+
+func (s *PokerServer) JoinGame(ctx context.Context, req *pb.InitiateRequest) (*pb.InitiateResponse, error) {
+	uid, err := gonanoid.New()
+	if err != nil {
+		log.Println("nanoid error", err)
+	}
+	fmt.Println("new user joined", req.Name)
+	return &pb.InitiateResponse{Uid: uid}, nil
 }
