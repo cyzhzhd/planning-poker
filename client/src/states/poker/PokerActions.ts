@@ -1,4 +1,4 @@
-import { Card, User } from '../../proto/poker_pb';
+import { User } from '../../proto/poker_pb';
 import { PokerDispatch } from './PokerContext';
 import { ActionTypes } from './PokerReducer';
 
@@ -13,10 +13,4 @@ export const updatePokerCard = (
   card: number,
 ): void => {
   dispatch({ card, type: ActionTypes.UPDATE_POKER_CARD });
-};
-export const updateUserCard = (
-  dispatch: PokerDispatch,
-  user: Card.AsObject,
-): void => {
-  dispatch({ user, type: ActionTypes.UPDATE_USER_CARD });
 };

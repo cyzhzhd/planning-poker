@@ -144,27 +144,5 @@ export class PokerServiceClient {
       this.methodDescriptorUserStream);
   }
 
-  methodDescriptorCardStream = new grpcWeb.MethodDescriptor(
-    '/poker.PokerService/CardStream',
-    grpcWeb.MethodType.SERVER_STREAMING,
-    proto_poker_pb.StreamRequest,
-    proto_poker_pb.Card,
-    (request: proto_poker_pb.StreamRequest) => {
-      return request.serializeBinary();
-    },
-    proto_poker_pb.Card.deserializeBinary
-  );
-
-  cardStream(
-    request: proto_poker_pb.StreamRequest,
-    metadata?: grpcWeb.Metadata): grpcWeb.ClientReadableStream<proto_poker_pb.Card> {
-    return this.client_.serverStreaming(
-      this.hostname_ +
-        '/poker.PokerService/CardStream',
-      request,
-      metadata || {},
-      this.methodDescriptorCardStream);
-  }
-
 }
 

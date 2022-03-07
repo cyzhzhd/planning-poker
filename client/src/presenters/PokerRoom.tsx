@@ -12,7 +12,6 @@ const PokerRoom: FC = () => {
     operations: { selectPokerCard },
   } = usePokerRoom();
 
-  console.log(pokerState.users);
   return (
     <div>
       <h1>PokerRoom</h1>
