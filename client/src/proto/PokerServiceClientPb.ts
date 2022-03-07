@@ -122,6 +122,49 @@ export class PokerServiceClient {
     this.methodDescriptorSendCard);
   }
 
+  methodDescriptorOperateGame = new grpcWeb.MethodDescriptor(
+    '/poker.PokerService/OperateGame',
+    grpcWeb.MethodType.UNARY,
+    proto_poker_pb.GameStatus,
+    google_protobuf_empty_pb.Empty,
+    (request: proto_poker_pb.GameStatus) => {
+      return request.serializeBinary();
+    },
+    google_protobuf_empty_pb.Empty.deserializeBinary
+  );
+
+  operateGame(
+    request: proto_poker_pb.GameStatus,
+    metadata: grpcWeb.Metadata | null): Promise<google_protobuf_empty_pb.Empty>;
+
+  operateGame(
+    request: proto_poker_pb.GameStatus,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: google_protobuf_empty_pb.Empty) => void): grpcWeb.ClientReadableStream<google_protobuf_empty_pb.Empty>;
+
+  operateGame(
+    request: proto_poker_pb.GameStatus,
+    metadata: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: google_protobuf_empty_pb.Empty) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/poker.PokerService/OperateGame',
+        request,
+        metadata || {},
+        this.methodDescriptorOperateGame,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/poker.PokerService/OperateGame',
+    request,
+    metadata || {},
+    this.methodDescriptorOperateGame);
+  }
+
   methodDescriptorUserStream = new grpcWeb.MethodDescriptor(
     '/poker.PokerService/UserStream',
     grpcWeb.MethodType.SERVER_STREAMING,
@@ -142,6 +185,28 @@ export class PokerServiceClient {
       request,
       metadata || {},
       this.methodDescriptorUserStream);
+  }
+
+  methodDescriptorGameStream = new grpcWeb.MethodDescriptor(
+    '/poker.PokerService/GameStream',
+    grpcWeb.MethodType.SERVER_STREAMING,
+    proto_poker_pb.StreamRequest,
+    proto_poker_pb.GameStatus,
+    (request: proto_poker_pb.StreamRequest) => {
+      return request.serializeBinary();
+    },
+    proto_poker_pb.GameStatus.deserializeBinary
+  );
+
+  gameStream(
+    request: proto_poker_pb.StreamRequest,
+    metadata?: grpcWeb.Metadata): grpcWeb.ClientReadableStream<proto_poker_pb.GameStatus> {
+    return this.client_.serverStreaming(
+      this.hostname_ +
+        '/poker.PokerService/GameStream',
+      request,
+      metadata || {},
+      this.methodDescriptorGameStream);
   }
 
 }

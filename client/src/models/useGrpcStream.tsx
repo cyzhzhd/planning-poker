@@ -1,8 +1,18 @@
-import { StreamRequest, UserResponse } from '../proto/poker_pb';
+import {
+  GameStatus,
+  StreamRequest,
+  User,
+  UserResponse,
+} from '../proto/poker_pb';
 import { useEffect } from 'react';
 import client from '../helpers/client';
 import { useUserState } from '../states/user/UserHooks';
-import { updatePokerUsers } from '../states/poker/PokerActions';
+import {
+  resetPlayerCards,
+  updateGameStatus,
+  updatePokerCard,
+  updatePokerPlayers,
+} from '../states/poker/PokerActions';
 import { usePokerDispatch } from '../states/poker/PokerHooks';
 
 const useGrpcStream = () => {
@@ -22,7 +32,22 @@ const useGrpcStream = () => {
     userStream.on('data', (chunk: UserResponse) => {
       const msg = chunk.toObject();
       console.log('userStream', msg.usersList);
-      updatePokerUsers(pokerDispatch, msg.usersList);
+      updatePokerPlayers(pokerDispatch, msg.usersList);
+    });
+
+    const gameStream = client.gameStream(req, {});
+    gameStream.on('data', (chunk: GameStatus) => {
+      const msg = chunk.toObject();
+      console.log('gameStream', msg);
+      updateGameStatus(pokerDispatch, {
+        operator: msg.operatorid,
+        status: msg.status,
+      });
+
+      if (msg.status === 'ready') {
+        resetPlayerCards(pokerDispatch);
+        updatePokerCard(pokerDispatch, -1);
+      }
     });
   }, [pokerDispatch, user]);
 };

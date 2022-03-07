@@ -2,15 +2,28 @@ import { User } from '../../proto/poker_pb';
 import { PokerDispatch } from './PokerContext';
 import { ActionTypes } from './PokerReducer';
 
-export const updatePokerUsers = (
+export const updatePokerPlayers = (
   dispatch: PokerDispatch,
-  users: User.AsObject[],
+  players: User.AsObject[],
 ): void => {
-  dispatch({ users, type: ActionTypes.UPDATE_POKER_USERS });
+  dispatch({ players, type: ActionTypes.UPDATE_POKER_PLAYERS });
 };
 export const updatePokerCard = (
   dispatch: PokerDispatch,
-  card: number,
+  point: number,
 ): void => {
-  dispatch({ card, type: ActionTypes.UPDATE_POKER_CARD });
+  dispatch({ point, type: ActionTypes.UPDATE_POKER_CARD });
+};
+export const updateGameStatus = (
+  dispatch: PokerDispatch,
+  { operator, status }: { operator: string; status: string },
+): void => {
+  dispatch({
+    operator,
+    gameStatus: status,
+    type: ActionTypes.UPDATE_GAME_STATUS,
+  });
+};
+export const resetPlayerCards = (dispatch: PokerDispatch): void => {
+  dispatch({ type: ActionTypes.RESET_PLAYER_CARDS });
 };

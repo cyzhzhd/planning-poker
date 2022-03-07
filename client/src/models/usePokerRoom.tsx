@@ -5,7 +5,7 @@ import { updatePokerCard } from '../states/poker/PokerActions';
 import { usePokerDispatch, usePokerState } from '../states/poker/PokerHooks';
 import { PokerState } from '../types/interface';
 import client from '../helpers/client';
-import { Card } from '../proto/poker_pb';
+import { Card, GameStatus } from '../proto/poker_pb';
 
 interface usePokerRoomReturnType {
   values: {
@@ -13,6 +13,8 @@ interface usePokerRoomReturnType {
   };
   operations: {
     selectPokerCard: (card: number) => void;
+    playPoker: () => void;
+    restartPoker: () => void;
   };
 }
 const usePokerRoom = (): usePokerRoomReturnType => {
@@ -28,15 +30,35 @@ const usePokerRoom = (): usePokerRoomReturnType => {
   const pokerDispatch = usePokerDispatch();
   const sendCard = (point: number) => {
     const req = new Card();
-
     req.setUid(user.id);
     req.setPoint(point);
     req.setUsername(user.name);
+
     client.sendCard(req, {});
   };
   const selectPokerCard = (card: number) => {
+    if (pokerState.gameStatus === 'play') return;
+    if (pokerState.point === card) {
+      card = -1;
+    }
+
     updatePokerCard(pokerDispatch, card);
     sendCard(card);
+  };
+
+  const playPoker = () => {
+    const req = new GameStatus();
+    req.setOperatorid(user.id);
+    req.setStatus('play');
+
+    client.operateGame(req, {});
+  };
+  const restartPoker = () => {
+    const req = new GameStatus();
+    req.setOperatorid(user.id);
+    req.setStatus('ready');
+
+    client.operateGame(req, {});
   };
 
   return {
@@ -45,6 +67,8 @@ const usePokerRoom = (): usePokerRoomReturnType => {
     },
     operations: {
       selectPokerCard,
+      playPoker,
+      restartPoker,
     },
   };
 };

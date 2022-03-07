@@ -25,6 +25,9 @@ export class InitiateResponse extends jspb.Message {
   getUid(): string;
   setUid(value: string): InitiateResponse;
 
+  getStatus(): string;
+  setStatus(value: string): InitiateResponse;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): InitiateResponse.AsObject;
   static toObject(includeInstance: boolean, msg: InitiateResponse): InitiateResponse.AsObject;
@@ -36,6 +39,7 @@ export class InitiateResponse extends jspb.Message {
 export namespace InitiateResponse {
   export type AsObject = {
     uid: string,
+    status: string,
   }
 }
 
@@ -126,6 +130,28 @@ export class UserResponse extends jspb.Message {
 export namespace UserResponse {
   export type AsObject = {
     usersList: Array<User.AsObject>,
+  }
+}
+
+export class GameStatus extends jspb.Message {
+  getOperatorid(): string;
+  setOperatorid(value: string): GameStatus;
+
+  getStatus(): string;
+  setStatus(value: string): GameStatus;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GameStatus.AsObject;
+  static toObject(includeInstance: boolean, msg: GameStatus): GameStatus.AsObject;
+  static serializeBinaryToWriter(message: GameStatus, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GameStatus;
+  static deserializeBinaryFromReader(message: GameStatus, reader: jspb.BinaryReader): GameStatus;
+}
+
+export namespace GameStatus {
+  export type AsObject = {
+    operatorid: string,
+    status: string,
   }
 }
 
