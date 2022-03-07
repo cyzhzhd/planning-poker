@@ -9,7 +9,6 @@ service PokerService {
   rpc JoinGame(InitiateRequest) returns (InitiateResponse) {};
   rpc SendCard(Card) returns (google.protobuf.Empty) {};
   rpc UserStream(StreamRequest) returns (stream UserResponse) {};
-  rpc CardStream(StreamRequest) returns (stream Card) {};
 }
 
 message InitiateRequest {

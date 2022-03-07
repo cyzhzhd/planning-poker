@@ -22,7 +22,6 @@ type PokerServiceClient interface {
 	JoinGame(ctx context.Context, in *InitiateRequest, opts ...grpc.CallOption) (*InitiateResponse, error)
 	SendCard(ctx context.Context, in *Card, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UserStream(ctx context.Context, in *StreamRequest, opts ...grpc.CallOption) (PokerService_UserStreamClient, error)
-	CardStream(ctx context.Context, in *StreamRequest, opts ...grpc.CallOption) (PokerService_CardStreamClient, error)
 }
 
 type pokerServiceClient struct {
@@ -83,38 +82,6 @@ func (x *pokerServiceUserStreamClient) Recv() (*UserResponse, error) {
 	return m, nil
 }
 
-func (c *pokerServiceClient) CardStream(ctx context.Context, in *StreamRequest, opts ...grpc.CallOption) (PokerService_CardStreamClient, error) {
-	stream, err := c.cc.NewStream(ctx, &PokerService_ServiceDesc.Streams[1], "/poker.PokerService/CardStream", opts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &pokerServiceCardStreamClient{stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
-}
-
-type PokerService_CardStreamClient interface {
-	Recv() (*Card, error)
-	grpc.ClientStream
-}
-
-type pokerServiceCardStreamClient struct {
-	grpc.ClientStream
-}
-
-func (x *pokerServiceCardStreamClient) Recv() (*Card, error) {
-	m := new(Card)
-	if err := x.ClientStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
 // PokerServiceServer is the server API for PokerService service.
 // All implementations must embed UnimplementedPokerServiceServer
 // for forward compatibility
@@ -122,7 +89,6 @@ type PokerServiceServer interface {
 	JoinGame(context.Context, *InitiateRequest) (*InitiateResponse, error)
 	SendCard(context.Context, *Card) (*emptypb.Empty, error)
 	UserStream(*StreamRequest, PokerService_UserStreamServer) error
-	CardStream(*StreamRequest, PokerService_CardStreamServer) error
 	mustEmbedUnimplementedPokerServiceServer()
 }
 
@@ -138,9 +104,6 @@ func (UnimplementedPokerServiceServer) SendCard(context.Context, *Card) (*emptyp
 }
 func (UnimplementedPokerServiceServer) UserStream(*StreamRequest, PokerService_UserStreamServer) error {
 	return status.Errorf(codes.Unimplemented, "method UserStream not implemented")
-}
-func (UnimplementedPokerServiceServer) CardStream(*StreamRequest, PokerService_CardStreamServer) error {
-	return status.Errorf(codes.Unimplemented, "method CardStream not implemented")
 }
 func (UnimplementedPokerServiceServer) mustEmbedUnimplementedPokerServiceServer() {}
 
@@ -212,27 +175,6 @@ func (x *pokerServiceUserStreamServer) Send(m *UserResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func _PokerService_CardStream_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(StreamRequest)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
-	}
-	return srv.(PokerServiceServer).CardStream(m, &pokerServiceCardStreamServer{stream})
-}
-
-type PokerService_CardStreamServer interface {
-	Send(*Card) error
-	grpc.ServerStream
-}
-
-type pokerServiceCardStreamServer struct {
-	grpc.ServerStream
-}
-
-func (x *pokerServiceCardStreamServer) Send(m *Card) error {
-	return x.ServerStream.SendMsg(m)
-}
-
 // PokerService_ServiceDesc is the grpc.ServiceDesc for PokerService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -253,11 +195,6 @@ var PokerService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "UserStream",
 			Handler:       _PokerService_UserStream_Handler,
-			ServerStreams: true,
-		},
-		{
-			StreamName:    "CardStream",
-			Handler:       _PokerService_CardStream_Handler,
 			ServerStreams: true,
 		},
 	},

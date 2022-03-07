@@ -15,7 +15,6 @@ import (
 type PokerServer struct {
 	pb.UnimplementedPokerServiceServer
 	UserStreams  map[string]pb.PokerService_UserStreamServer
-	CardStreams  map[string]pb.PokerService_CardStreamServer
 	users        []*pb.User
 	usersMu      sync.Mutex
 	userStreamMu sync.Mutex
@@ -23,26 +22,40 @@ type PokerServer struct {
 }
 
 func (s *PokerServer) JoinGame(ctx context.Context, req *pb.InitiateRequest) (*pb.InitiateResponse, error) {
+	fmt.Println("JoinGame called", s.users)
 	uid, err := gonanoid.New()
 	if err != nil {
 		log.Println("nanoid error", err)
 	}
 
+	newUser := &pb.User{Id: uid, Name: req.Name, Point: -1}
 	s.usersMu.Lock()
-	newUser := pb.User{Id: uid, Name: req.Name}
-	s.users = append(s.users, &newUser)
+	s.users = append(s.users, newUser)
 	s.usersMu.Unlock()
-	fmt.Println("new user joined", &newUser)
+	fmt.Println("user joined", s.users)
 
 	return &pb.InitiateResponse{Uid: uid}, nil
 }
+
 func (s *PokerServer) SendCard(ctx context.Context, req *pb.Card) (*emptypb.Empty, error) {
 	fmt.Println("new card", req)
-	for _, stream := range s.CardStreams {
-		if err := stream.Send(&pb.Card{Uid: req.Uid, UserName: req.UserName, Point: req.Point}); err != nil {
+	s.usersMu.Lock()
+	idx := findUserindex(req.Uid, s.users)
+	if idx == -1 {
+		fmt.Println("user was not registered")
+		return &emptypb.Empty{}, errors.New("user was not registered")
+	}
+	s.users[idx].Point = req.Point
+
+	// fmt.Println("send card cardStreams", s.User)
+	for idx, stream := range s.UserStreams {
+		fmt.Println("card Stream idx:", idx)
+		if err := stream.Send(&pb.UserResponse{Users: s.users}); err != nil {
+			fmt.Println("SendCard error")
 			return &emptypb.Empty{}, err
 		}
 	}
+	s.usersMu.Unlock()
 
 	return &emptypb.Empty{}, nil
 }
@@ -51,61 +64,50 @@ func RemoveIndex(s []*pb.User, index int) []*pb.User {
 	return append(s[:index], s[index+1:]...)
 }
 func findUserindex(id string, users []*pb.User) int {
-	for k, v := range users {
+	for idx, v := range users {
 		if id == v.Id {
-			return k
+			return idx
 		}
 	}
 	return -1
 }
 
 func (s *PokerServer) UserStream(req *pb.StreamRequest, stream pb.PokerService_UserStreamServer) error {
-	fmt.Println("UserStream")
+	fmt.Println("a new user stream connection with user", req.Uid)
 	s.userStreamMu.Lock()
 	s.UserStreams[req.Uid] = stream
-	fmt.Println("a new user stream connection with user", req.Uid)
-	s.userStreamMu.Unlock()
 
 	fmt.Println("users", s.users)
 	fmt.Println("user streams", s.UserStreams)
 	for _, stream := range s.UserStreams {
 		if err := stream.Send(&pb.UserResponse{Users: s.users}); err != nil {
+			fmt.Println("UserStream error")
 			return err
 		}
 	}
+	s.userStreamMu.Unlock()
 
 	// wait until the connection disconnected
 	<-stream.Context().Done()
 	s.userStreamMu.Lock()
-	fmt.Println("connect done")
 	delete(s.UserStreams, req.Uid)
 	s.userStreamMu.Unlock()
 
 	s.usersMu.Lock()
 	idx := findUserindex(req.Uid, s.users)
 	if idx == -1 {
+		fmt.Println("user was not connected")
 		return errors.New("user was not connected")
 	}
 	s.users = RemoveIndex(s.users, idx)
-	s.usersMu.Unlock()
 
 	for _, stream := range s.UserStreams {
 		if err := stream.Send(&pb.UserResponse{Users: s.users}); err != nil {
+			fmt.Println("UserStream error")
 			return err
 		}
 	}
-	return nil
-}
-func (s *PokerServer) CardStream(req *pb.StreamRequest, stream pb.PokerService_CardStreamServer) error {
-	fmt.Println("CardStream")
-	s.cardStreamMu.Lock()
-	s.CardStreams[req.Uid] = stream
-	fmt.Println("a new card stream connection with user", req.Uid)
-	s.cardStreamMu.Unlock()
-
-	<-stream.Context().Done()
-	s.cardStreamMu.Lock()
-	delete(s.CardStreams, req.Uid)
-	s.cardStreamMu.Unlock()
+	s.usersMu.Unlock()
+	fmt.Println("User stream finished with", req.Uid)
 	return nil
 }
