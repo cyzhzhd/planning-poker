@@ -21,7 +21,9 @@ const _ = grpc.SupportPackageIsVersion7
 type PokerServiceClient interface {
 	JoinGame(ctx context.Context, in *InitiateRequest, opts ...grpc.CallOption) (*InitiateResponse, error)
 	SendCard(ctx context.Context, in *Card, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	OperateGame(ctx context.Context, in *GameStatus, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UserStream(ctx context.Context, in *StreamRequest, opts ...grpc.CallOption) (PokerService_UserStreamClient, error)
+	GameStream(ctx context.Context, in *StreamRequest, opts ...grpc.CallOption) (PokerService_GameStreamClient, error)
 }
 
 type pokerServiceClient struct {
@@ -44,6 +46,15 @@ func (c *pokerServiceClient) JoinGame(ctx context.Context, in *InitiateRequest, 
 func (c *pokerServiceClient) SendCard(ctx context.Context, in *Card, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/poker.PokerService/SendCard", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *pokerServiceClient) OperateGame(ctx context.Context, in *GameStatus, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/poker.PokerService/OperateGame", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -82,13 +93,47 @@ func (x *pokerServiceUserStreamClient) Recv() (*UserResponse, error) {
 	return m, nil
 }
 
+func (c *pokerServiceClient) GameStream(ctx context.Context, in *StreamRequest, opts ...grpc.CallOption) (PokerService_GameStreamClient, error) {
+	stream, err := c.cc.NewStream(ctx, &PokerService_ServiceDesc.Streams[1], "/poker.PokerService/GameStream", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &pokerServiceGameStreamClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type PokerService_GameStreamClient interface {
+	Recv() (*GameStatus, error)
+	grpc.ClientStream
+}
+
+type pokerServiceGameStreamClient struct {
+	grpc.ClientStream
+}
+
+func (x *pokerServiceGameStreamClient) Recv() (*GameStatus, error) {
+	m := new(GameStatus)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // PokerServiceServer is the server API for PokerService service.
 // All implementations must embed UnimplementedPokerServiceServer
 // for forward compatibility
 type PokerServiceServer interface {
 	JoinGame(context.Context, *InitiateRequest) (*InitiateResponse, error)
 	SendCard(context.Context, *Card) (*emptypb.Empty, error)
+	OperateGame(context.Context, *GameStatus) (*emptypb.Empty, error)
 	UserStream(*StreamRequest, PokerService_UserStreamServer) error
+	GameStream(*StreamRequest, PokerService_GameStreamServer) error
 	mustEmbedUnimplementedPokerServiceServer()
 }
 
@@ -102,8 +147,14 @@ func (UnimplementedPokerServiceServer) JoinGame(context.Context, *InitiateReques
 func (UnimplementedPokerServiceServer) SendCard(context.Context, *Card) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendCard not implemented")
 }
+func (UnimplementedPokerServiceServer) OperateGame(context.Context, *GameStatus) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method OperateGame not implemented")
+}
 func (UnimplementedPokerServiceServer) UserStream(*StreamRequest, PokerService_UserStreamServer) error {
 	return status.Errorf(codes.Unimplemented, "method UserStream not implemented")
+}
+func (UnimplementedPokerServiceServer) GameStream(*StreamRequest, PokerService_GameStreamServer) error {
+	return status.Errorf(codes.Unimplemented, "method GameStream not implemented")
 }
 func (UnimplementedPokerServiceServer) mustEmbedUnimplementedPokerServiceServer() {}
 
@@ -154,6 +205,24 @@ func _PokerService_SendCard_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PokerService_OperateGame_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GameStatus)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PokerServiceServer).OperateGame(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/poker.PokerService/OperateGame",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PokerServiceServer).OperateGame(ctx, req.(*GameStatus))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _PokerService_UserStream_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(StreamRequest)
 	if err := stream.RecvMsg(m); err != nil {
@@ -175,6 +244,27 @@ func (x *pokerServiceUserStreamServer) Send(m *UserResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _PokerService_GameStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(StreamRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(PokerServiceServer).GameStream(m, &pokerServiceGameStreamServer{stream})
+}
+
+type PokerService_GameStreamServer interface {
+	Send(*GameStatus) error
+	grpc.ServerStream
+}
+
+type pokerServiceGameStreamServer struct {
+	grpc.ServerStream
+}
+
+func (x *pokerServiceGameStreamServer) Send(m *GameStatus) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // PokerService_ServiceDesc is the grpc.ServiceDesc for PokerService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,11 +280,20 @@ var PokerService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "SendCard",
 			Handler:    _PokerService_SendCard_Handler,
 		},
+		{
+			MethodName: "OperateGame",
+			Handler:    _PokerService_OperateGame_Handler,
+		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "UserStream",
 			Handler:       _PokerService_UserStream_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GameStream",
+			Handler:       _PokerService_GameStream_Handler,
 			ServerStreams: true,
 		},
 	},

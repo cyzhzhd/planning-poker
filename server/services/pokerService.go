@@ -15,10 +15,12 @@ import (
 type PokerServer struct {
 	pb.UnimplementedPokerServiceServer
 	UserStreams  map[string]pb.PokerService_UserStreamServer
+	GameStreams  map[string]pb.PokerService_GameStreamServer
+	status       string
 	users        []*pb.User
 	usersMu      sync.Mutex
 	userStreamMu sync.Mutex
-	cardStreamMu sync.Mutex
+	gameStreamMu sync.Mutex
 }
 
 func (s *PokerServer) JoinGame(ctx context.Context, req *pb.InitiateRequest) (*pb.InitiateResponse, error) {
@@ -34,7 +36,7 @@ func (s *PokerServer) JoinGame(ctx context.Context, req *pb.InitiateRequest) (*p
 	s.usersMu.Unlock()
 	fmt.Println("user joined", s.users)
 
-	return &pb.InitiateResponse{Uid: uid}, nil
+	return &pb.InitiateResponse{Uid: uid, Status: s.status}, nil
 }
 
 func (s *PokerServer) SendCard(ctx context.Context, req *pb.Card) (*emptypb.Empty, error) {
@@ -46,8 +48,9 @@ func (s *PokerServer) SendCard(ctx context.Context, req *pb.Card) (*emptypb.Empt
 		return &emptypb.Empty{}, errors.New("user was not registered")
 	}
 	s.users[idx].Point = req.Point
+	s.usersMu.Unlock()
 
-	// fmt.Println("send card cardStreams", s.User)
+	s.userStreamMu.Lock()
 	for idx, stream := range s.UserStreams {
 		fmt.Println("card Stream idx:", idx)
 		if err := stream.Send(&pb.UserResponse{Users: s.users}); err != nil {
@@ -55,7 +58,31 @@ func (s *PokerServer) SendCard(ctx context.Context, req *pb.Card) (*emptypb.Empt
 			return &emptypb.Empty{}, err
 		}
 	}
-	s.usersMu.Unlock()
+	s.userStreamMu.Unlock()
+
+	return &emptypb.Empty{}, nil
+}
+
+func (s *PokerServer) OperateGame(ctx context.Context, req *pb.GameStatus) (*emptypb.Empty, error) {
+	s.status = req.Status
+	fmt.Println("OperateGame", req.Status, req.OperatorId)
+
+	if s.status == "ready" {
+		// reset users
+		s.usersMu.Lock()
+		for _, user := range s.users {
+			user.Point = -1
+		}
+		s.usersMu.Unlock()
+	}
+
+	s.gameStreamMu.Lock()
+	for _, stream := range s.GameStreams {
+		if err := stream.Send(&pb.GameStatus{OperatorId: req.OperatorId, Status: req.Status}); err != nil {
+			return &emptypb.Empty{}, err
+		}
+	}
+	s.gameStreamMu.Unlock()
 
 	return &emptypb.Empty{}, nil
 }
@@ -109,5 +136,19 @@ func (s *PokerServer) UserStream(req *pb.StreamRequest, stream pb.PokerService_U
 	}
 	s.usersMu.Unlock()
 	fmt.Println("User stream finished with", req.Uid)
+	return nil
+}
+func (s *PokerServer) GameStream(req *pb.StreamRequest, stream pb.PokerService_GameStreamServer) error {
+	fmt.Println("CardStream")
+	s.gameStreamMu.Lock()
+	s.GameStreams[req.Uid] = stream
+	s.gameStreamMu.Unlock()
+	fmt.Println("a new game stream connection with user", req.Uid)
+
+	<-stream.Context().Done()
+	s.gameStreamMu.Lock()
+	delete(s.GameStreams, req.Uid)
+	s.gameStreamMu.Unlock()
+	fmt.Println("Card stream finished with", req.Uid)
 	return nil
 }

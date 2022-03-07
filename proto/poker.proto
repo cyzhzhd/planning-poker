@@ -8,7 +8,9 @@ package poker;
 service PokerService {
   rpc JoinGame(InitiateRequest) returns (InitiateResponse) {};
   rpc SendCard(Card) returns (google.protobuf.Empty) {};
+  rpc OperateGame(GameStatus) returns (google.protobuf.Empty) {};
   rpc UserStream(StreamRequest) returns (stream UserResponse) {};
+  rpc GameStream(StreamRequest) returns (stream GameStatus) {};
 }
 
 message InitiateRequest {
@@ -16,6 +18,7 @@ message InitiateRequest {
 }
 message InitiateResponse {
   string uid = 1;
+  string status = 2;
 }
 
 message StreamRequest {
@@ -37,3 +40,7 @@ message UserResponse {
   repeated User users = 1;
 }
 
+message GameStatus {
+  string operatorId = 1;
+  string status = 2;
+}

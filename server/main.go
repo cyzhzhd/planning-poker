@@ -18,7 +18,7 @@ func main() {
 	}
 
 	grpcServer := grpc.NewServer()
-	pokerServer := services.PokerServer{UserStreams: make(map[string]pb.PokerService_UserStreamServer)}
+	pokerServer := services.PokerServer{UserStreams: make(map[string]pb.PokerService_UserStreamServer), GameStreams: make(map[string]pb.PokerService_GameStreamServer)}
 	pb.RegisterPokerServiceServer(grpcServer, &pokerServer)
 
 	err = grpcServer.Serve(listen)
