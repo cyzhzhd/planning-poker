@@ -32,3 +32,13 @@ services:
       - CHOKIDAR_USEPOLLING=true
     stdin_open: true
     tty: true
+  
+  server:
+    build:
+      context: ./server
+    container_name: server
+    restart: "on-failure"
+    ports:
+      - "8082:8082"
+    tty: true
+    stdin_open: true
