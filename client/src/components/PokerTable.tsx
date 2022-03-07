@@ -13,16 +13,16 @@ const PokerTable: FC<PokerTableProps> = ({ pokerState, play, restart }) => {
   return (
     <div>
       <Table>
-        {pokerState.point >= 0 ? (
+        {pokerState.gameStatus === 'play' ? (
+          <button onClick={restart}>새게임</button>
+        ) : (
           <>
-            {pokerState.gameStatus === 'play' ? (
-              <button onClick={restart}>새게임</button>
-            ) : (
+            {pokerState.point >= 0 ? (
               <button onClick={play}>시작</button>
+            ) : (
+              <div>카드를 고르세요</div>
             )}
           </>
-        ) : (
-          <div>카드를 고르세요</div>
         )}
       </Table>
       <PokerPlayers

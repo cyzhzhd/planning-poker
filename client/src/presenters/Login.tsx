@@ -4,12 +4,15 @@ import { DEFAULT_POINT } from '../constant/constant';
 import client from '../helpers/client';
 import useInput from '../hooks/useInput';
 import { InitiateRequest } from '../proto/poker_pb';
+import { updateGameStatus } from '../states/poker/PokerActions';
+import { usePokerDispatch } from '../states/poker/PokerHooks';
 import { updateUser } from '../states/user/UserActions';
 import { useUserDispatch } from '../states/user/UserHooks';
 
 const Login: FC = () => {
   const [name, input, setName] = useInput({ type: 'text' });
   const userDispatch = useUserDispatch();
+  const pokerDispatch = usePokerDispatch();
   const navigate = useNavigate();
 
   const onClickHandler = (e: React.FormEvent) => {
@@ -28,6 +31,10 @@ const Login: FC = () => {
         id: response.getUid(),
         name,
         point: DEFAULT_POINT,
+      });
+      updateGameStatus(pokerDispatch, {
+        operator: '',
+        status: response.getStatus(),
       });
       setName('');
       navigate('/poker-room');
