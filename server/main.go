@@ -11,7 +11,6 @@ import (
 )
 
 func main() {
-	fmt.Println("server started")
 	listen, err := net.Listen("tcp", fmt.Sprintf(":%d", 8082))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
@@ -21,6 +20,7 @@ func main() {
 	pokerServer := services.PokerServer{UserStreams: make(map[string]pb.PokerService_UserStreamServer), GameStreams: make(map[string]pb.PokerService_GameStreamServer)}
 	pb.RegisterPokerServiceServer(grpcServer, &pokerServer)
 
+	fmt.Println("server started")
 	err = grpcServer.Serve(listen)
 	if err != nil {
 		log.Fatalf("Failed to start gRPC Server :: %v", err)

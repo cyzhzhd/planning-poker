@@ -6,7 +6,7 @@ services:
       - ./envoy.yaml:/etc/envoy/envoy.yaml
     ports:
       - "9901:9901"
-      - "8080:8080"
+      - "30009:8080"
 
   web:
     image: nginx:latest
@@ -39,6 +39,6 @@ services:
     container_name: server
     restart: "on-failure"
     ports:
-      - "8082:8082"
+      - "30010:8082"
     tty: true
     stdin_open: true
