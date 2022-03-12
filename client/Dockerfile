@@ -11,4 +11,9 @@ RUN npm install -g react-router-dom
 RUN apk add --no-cache git
 
 COPY . /app
+
+RUN chown -R node /app/node_modules
+
+USER node
+
 CMD ["npm", "start"]
