@@ -1,6 +1,8 @@
 import { PokerServiceClient } from '../proto/PokerServiceClientPb';
 
-const client = new PokerServiceClient('http://localhost:8080');
+const url = process.env.REACT_APP_SERVER_URL;
+const port = process.env.REACT_APP_SERVER_PORT;
+const client = new PokerServiceClient(`${url}:${port}`);
 console.log('client created', client);
 
 export default client;
