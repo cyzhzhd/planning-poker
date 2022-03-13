@@ -5,7 +5,7 @@ services:
     volumes:
       - ./envoy.yaml:/etc/envoy/envoy.yaml
     ports:
-      - "9901:9901"
+      - "30011:9901"
       - "30009:8080"
 
   web:
