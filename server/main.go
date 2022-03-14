@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"net"
@@ -11,8 +12,11 @@ import (
 )
 
 func main() {
+	portNumberPtr := flag.Int("port", 8082, "a port number for the gRPC server")
+	flag.Parse()
+
 	fmt.Println("server started")
-	listen, err := net.Listen("tcp", fmt.Sprintf(":%d", 8082))
+	listen, err := net.Listen("tcp", fmt.Sprintf(":%d", *portNumberPtr))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
