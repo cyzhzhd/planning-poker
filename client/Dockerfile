@@ -14,4 +14,9 @@ RUN chown -R node /app/node_modules
 
 USER node
 
+ARG SERVER_URL
+ARG ENVOY_PORT
+ENV REACT_APP_SERVER_URL=$SERVER_URL
+ENV REACT_APP_SERVER_PORT=$ENVOY_PORT
+
 CMD ["npm", "start"]

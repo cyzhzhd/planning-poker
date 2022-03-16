@@ -8,3 +8,8 @@ proto-client-gen: proto-client-create-dir
 	protoc -I=. ./proto/*.proto --js_out=import_style=commonjs:./client/src --grpc-web_out=import_style=typescript,mode=grpcwebtext:./client/src
 
 proto-gen: proto-server-gen proto-client-gen
+
+up:
+	docker-compose --env-file .env up -d
+down:
+	docker-compose down
