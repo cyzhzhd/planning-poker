@@ -33,7 +33,7 @@ const GameStatsTable: FC<GameStatsTableProps> = ({ display, cards }) => {
       <Votes>
         {Object.entries(pointsMap).map(([point, count]) => (
           <VoteWrapper key={point}>
-            <Gauge percent={(count / cards.length) * 100} />
+            <Gauge percent={((count / cards.length) * 100).toFixed(2)} />
             <PlayerCard point={Number(point)} isOpen={true} />
             <VoteValue>{count}표</VoteValue>
           </VoteWrapper>
@@ -41,7 +41,7 @@ const GameStatsTable: FC<GameStatsTableProps> = ({ display, cards }) => {
       </Votes>
       <Stats>
         <StatKey>Average:</StatKey>
-        <StatValue>{average}</StatValue>
+        <StatValue>{average.toFixed(1)}</StatValue>
       </Stats>
     </StatsTable>
   );

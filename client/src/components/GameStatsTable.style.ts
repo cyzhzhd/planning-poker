@@ -13,7 +13,7 @@ export const VoteWrapper = styled.div({
   justifyContent: 'center',
   alignItems: 'center',
 });
-export const Gauge = styled.div(({ percent }: { percent: number }) => ({
+export const Gauge = styled.div(({ percent }: { percent: string }) => ({
   width: 4,
   height: 80,
   border: '1px solid black',
