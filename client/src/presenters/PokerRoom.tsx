@@ -1,12 +1,11 @@
 import React, { FC } from 'react';
+import GameStatsTable from '../components/GameStatsTable';
 import PokerCardList from '../components/PokerCardList';
 import PokerTable from '../components/PokerTable';
 import useGrpcStream from '../models/useGrpcStream';
 import usePokerRoom from '../models/usePokerRoom';
-import { useUserState } from '../states/user/UserHooks';
 
 const PokerRoom: FC = () => {
-  const user = useUserState();
   useGrpcStream();
   const {
     values: { pokerState },
@@ -17,15 +16,13 @@ const PokerRoom: FC = () => {
     <div>
       <h1>PokerRoom</h1>
       <div>
-        hi {user.id}:{user.name}
-      </div>
-      <div>
         <PokerTable
           pokerState={pokerState}
           play={playPoker}
           restart={restartPoker}
         />
       </div>
+      <GameStatsTable />
       <PokerCardList
         points={[0, 1, 2, 3, 5, 8, 13]}
         onClickHandler={selectPokerCard}

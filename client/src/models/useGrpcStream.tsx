@@ -1,9 +1,4 @@
-import {
-  GameStatus,
-  StreamRequest,
-  User,
-  UserResponse,
-} from '../proto/poker_pb';
+import { GameStatus, StreamRequest, UserResponse } from '../proto/poker_pb';
 import { useEffect } from 'react';
 import client from '../helpers/client';
 import { useUserState } from '../states/user/UserHooks';
@@ -15,7 +10,7 @@ import {
 } from '../states/poker/PokerActions';
 import { usePokerDispatch } from '../states/poker/PokerHooks';
 
-const useGrpcStream = () => {
+const useGrpcStream = (): void => {
   const user = useUserState();
 
   const pokerDispatch = usePokerDispatch();

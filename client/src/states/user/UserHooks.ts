@@ -1,5 +1,11 @@
 import { useContext } from 'react';
-import { UserStateContext, UserDispatchContext } from './UserContext';
+import { User } from '../../proto/poker_pb';
+import {
+  UserStateContext,
+  UserDispatchContext,
+  UserDispatch,
+} from './UserContext';
 
-export const useUserState = () => useContext(UserStateContext);
-export const useUserDispatch = () => useContext(UserDispatchContext);
+export const useUserState = (): User.AsObject => useContext(UserStateContext);
+export const useUserDispatch = (): UserDispatch =>
+  useContext(UserDispatchContext);

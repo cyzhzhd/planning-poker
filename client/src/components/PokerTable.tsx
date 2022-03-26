@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import { User } from '../proto/poker_pb';
 import { PokerState } from '../types/interface';
 import PokerPlayers from './PokerPlayers';
 import { Table } from './PokerTable.style';
