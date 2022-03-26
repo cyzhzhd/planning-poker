@@ -19,7 +19,6 @@ const useGrpcStream = (): void => {
     if (user.id === '') {
       return;
     }
-    console.log('useEffect');
 
     const req = new StreamRequest();
     req.setUid(user.id);
@@ -27,14 +26,12 @@ const useGrpcStream = (): void => {
     const userStream = client.userStream(req, {});
     userStream.on('data', (chunk: UserResponse) => {
       const msg = chunk.toObject();
-      console.log('userStream', msg.usersList);
       updatePokerPlayers(pokerDispatch, msg.usersList);
     });
 
     const gameStream = client.gameStream(req, {});
     gameStream.on('data', (chunk: GameStatus) => {
       const msg = chunk.toObject();
-      console.log('gameStream', msg);
       updateGameStatus(pokerDispatch, {
         operator: msg.operatorid,
         status: msg.status as PokerGameStatus,

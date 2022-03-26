@@ -6,7 +6,6 @@ interface PlayerCardProps {
   isOpen: boolean;
 }
 const PlayerCard: FC<PlayerCardProps> = ({ point, isOpen }) => {
-  console.log(point, isOpen && point < 0);
   return (
     <CardWrapper isOpen={isOpen || point < 0}>
       {point >= 0 ? point : ''}
