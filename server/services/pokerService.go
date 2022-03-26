@@ -45,6 +45,7 @@ func (s *PokerServer) SendCard(ctx context.Context, req *pb.Card) (*emptypb.Empt
 	idx := findUserindex(req.Uid, s.users)
 	if idx == -1 {
 		fmt.Println("user was not registered")
+		s.usersMu.Unlock()
 		return &emptypb.Empty{}, errors.New("user was not registered")
 	}
 	s.users[idx].Point = req.Point
@@ -128,6 +129,7 @@ func (s *PokerServer) UserStream(req *pb.StreamRequest, stream pb.PokerService_U
 	idx := findUserindex(req.Uid, s.users)
 	if idx == -1 {
 		fmt.Println("user was not connected")
+		s.usersMu.Unlock()
 		return errors.New("user was not connected")
 	}
 	s.users = RemoveIndex(s.users, idx)
