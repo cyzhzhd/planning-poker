@@ -1,4 +1,5 @@
 import { User } from '../../proto/poker_pb';
+import { GameStatus } from '../../types/interface';
 import { PokerDispatch } from './PokerContext';
 import { ActionTypes } from './PokerReducer';
 
@@ -16,7 +17,7 @@ export const updatePokerCard = (
 };
 export const updateGameStatus = (
   dispatch: PokerDispatch,
-  { operator, status }: { operator: string; status: string },
+  { operator, status }: { operator: string; status: GameStatus },
 ): void => {
   dispatch({
     operator,

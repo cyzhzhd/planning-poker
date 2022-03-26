@@ -8,6 +8,7 @@ import { updateGameStatus } from '../states/poker/PokerActions';
 import { usePokerDispatch } from '../states/poker/PokerHooks';
 import { updateUser } from '../states/user/UserActions';
 import { useUserDispatch } from '../states/user/UserHooks';
+import { GameStatus } from '../types/interface';
 
 const Login: FC = () => {
   const [name, input, setName] = useInput({ type: 'text' });
@@ -34,7 +35,7 @@ const Login: FC = () => {
       });
       updateGameStatus(pokerDispatch, {
         operator: '',
-        status: response.getStatus(),
+        status: response.getStatus() as GameStatus,
       });
       setName('');
       navigate('/poker-room');

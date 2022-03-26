@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { DEFAULT_POINT } from '../../constant/constant';
 import { Card, User } from '../../proto/poker_pb';
-import { PokerState } from '../../types/interface';
+import { GameStatus, PokerState } from '../../types/interface';
 
 export enum ActionTypes {
   UPDATE_POKER_PLAYERS = 'updatePokerPlayers',
@@ -19,14 +19,14 @@ export interface PokerAction {
   players?: User.AsObject[];
   point?: number;
   user?: Card.AsObject;
-  gameStatus?: string;
+  gameStatus?: GameStatus;
   operator?: string;
 }
 
 export const initialState: PokerState = {
   players: [],
   point: -1,
-  gameStatus: 'ready',
+  gameStatus: GameStatus.ready,
   operator: '',
 };
 
@@ -47,7 +47,7 @@ export const reducer = (state = initialState, action: PokerAction) => {
     case ActionTypes.UPDATE_GAME_STATUS: {
       return {
         ...state,
-        gameStatus: action.gameStatus ?? 'ready',
+        gameStatus: action.gameStatus ?? GameStatus.ready,
         operator: action.operator ?? '',
       };
     }

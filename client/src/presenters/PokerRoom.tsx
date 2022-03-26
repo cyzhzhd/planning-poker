@@ -4,6 +4,7 @@ import PokerCardList from '../components/PokerCardList';
 import PokerTable from '../components/PokerTable';
 import useGrpcStream from '../models/useGrpcStream';
 import usePokerRoom from '../models/usePokerRoom';
+import { GameStatus } from '../types/interface';
 
 const PokerRoom: FC = () => {
   useGrpcStream();
@@ -22,7 +23,7 @@ const PokerRoom: FC = () => {
           restart={restartPoker}
         />
       </div>
-      <GameStatsTable />
+      <GameStatsTable display={pokerState.gameStatus == GameStatus.play} />
       <PokerCardList
         points={[0, 1, 2, 3, 5, 8, 13]}
         onClickHandler={selectPokerCard}

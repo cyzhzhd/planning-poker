@@ -9,6 +9,7 @@ import {
   updatePokerPlayers,
 } from '../states/poker/PokerActions';
 import { usePokerDispatch } from '../states/poker/PokerHooks';
+import { GameStatus as PokerGameStatus } from '../types/interface';
 
 const useGrpcStream = (): void => {
   const user = useUserState();
@@ -36,7 +37,7 @@ const useGrpcStream = (): void => {
       console.log('gameStream', msg);
       updateGameStatus(pokerDispatch, {
         operator: msg.operatorid,
-        status: msg.status,
+        status: msg.status as PokerGameStatus,
       });
 
       if (msg.status === 'ready') {
