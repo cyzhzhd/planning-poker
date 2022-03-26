@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { DEFAULT_POINT } from '../../constant/constant';
 import { Card, User } from '../../proto/poker_pb';
 import { PokerState } from '../../types/interface';

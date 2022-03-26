@@ -1,4 +1,4 @@
-FROM node:17.5.0-alpine
+FROM node:16.5.0-alpine
 
 RUN mkdir /app
 WORKDIR /app
@@ -10,9 +10,9 @@ RUN apk add --no-cache git
 
 COPY . /app
 
-RUN chown -R node /app/node_modules
+# RUN chown -R node /app/node_modules
 
-USER node
+# USER node
 
 ARG SERVER_URL
 ARG ENVOY_PORT

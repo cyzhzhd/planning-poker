@@ -1,5 +1,11 @@
 import { useContext } from 'react';
-import { PokerStateContext, PokerDispatchContext } from './PokerContext';
+import { PokerState } from '../../types/interface';
+import {
+  PokerStateContext,
+  PokerDispatchContext,
+  PokerDispatch,
+} from './PokerContext';
 
-export const usePokerState = () => useContext(PokerStateContext);
-export const usePokerDispatch = () => useContext(PokerDispatchContext);
+export const usePokerState = (): PokerState => useContext(PokerStateContext);
+export const usePokerDispatch = (): PokerDispatch =>
+  useContext(PokerDispatchContext);
