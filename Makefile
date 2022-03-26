@@ -10,6 +10,8 @@ proto-client-gen: proto-client-create-dir
 proto-gen: proto-server-gen proto-client-gen
 
 up:
+	docker-compose --env-file .env up --build -d
+upc:
 	docker-compose --env-file .env up -d
 down:
 	docker-compose down
