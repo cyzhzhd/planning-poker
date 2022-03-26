@@ -10,9 +10,9 @@ RUN apk add --no-cache git
 
 COPY . /app
 
-# RUN chown -R node /app/node_modules
+RUN chown -R node /app/node_modules
 
-# USER node
+USER node
 
 ARG SERVER_URL
 ARG ENVOY_PORT
