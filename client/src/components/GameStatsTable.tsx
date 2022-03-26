@@ -12,14 +12,12 @@ import {
 import PlayerCard from './PlayerCard';
 
 interface GameStatsTableProps {
-  display: boolean;
   cards: number[];
 }
 interface pointMap {
   [key: string]: number;
 }
-const GameStatsTable: FC<GameStatsTableProps> = ({ display, cards }) => {
-  if (display === false) return <></>;
+const GameStatsTable: FC<GameStatsTableProps> = ({ cards }) => {
   const pointsMap = cards.reduce((acc: pointMap, val: number) => {
     acc[val] ? acc[val]++ : (acc[val] = 1);
     return acc;
