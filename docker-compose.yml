@@ -3,7 +3,7 @@ services:
   envoy:
     container_name: envoy
     restart: "on-failure"
-    image: envoyproxy/envoy-dev:e4955aed5694f9935d674419dbb364e744f697b4
+    image: envoyproxy/envoy-dev:0b769f6e299dac9115cba10008ce984d0ebf951a
     ports:
       - ${ENVOY_ADMIN_PORT}:9901
       - ${ENVOY_PORT}:8080

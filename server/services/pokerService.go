@@ -55,6 +55,7 @@ func (s *PokerServer) SendCard(ctx context.Context, req *pb.Card) (*emptypb.Empt
 		fmt.Println("card Stream idx:", idx)
 		if err := stream.Send(&pb.UserResponse{Users: s.users}); err != nil {
 			fmt.Println("SendCard error")
+			s.userStreamMu.Unlock()
 			return &emptypb.Empty{}, err
 		}
 	}
@@ -79,11 +80,13 @@ func (s *PokerServer) OperateGame(ctx context.Context, req *pb.GameStatus) (*emp
 	s.gameStreamMu.Lock()
 	for _, stream := range s.GameStreams {
 		if err := stream.Send(&pb.GameStatus{OperatorId: req.OperatorId, Status: req.Status}); err != nil {
+			s.gameStreamMu.Unlock()
 			return &emptypb.Empty{}, err
 		}
 	}
 	s.gameStreamMu.Unlock()
 
+	fmt.Println("OperateGame Done", req.Status, req.OperatorId)
 	return &emptypb.Empty{}, nil
 }
 
@@ -108,7 +111,8 @@ func (s *PokerServer) UserStream(req *pb.StreamRequest, stream pb.PokerService_U
 	fmt.Println("user streams", s.UserStreams)
 	for _, stream := range s.UserStreams {
 		if err := stream.Send(&pb.UserResponse{Users: s.users}); err != nil {
-			fmt.Println("UserStream error")
+			s.userStreamMu.Unlock()
+			fmt.Println("UserStream error on joining")
 			return err
 		}
 	}
@@ -127,14 +131,17 @@ func (s *PokerServer) UserStream(req *pb.StreamRequest, stream pb.PokerService_U
 		return errors.New("user was not connected")
 	}
 	s.users = RemoveIndex(s.users, idx)
+	s.usersMu.Unlock()
 
+	s.userStreamMu.Lock()
 	for _, stream := range s.UserStreams {
 		if err := stream.Send(&pb.UserResponse{Users: s.users}); err != nil {
-			fmt.Println("UserStream error")
+			s.userStreamMu.Unlock()
+			fmt.Println("UserStream error when leaving", err)
 			return err
 		}
 	}
-	s.usersMu.Unlock()
+	s.userStreamMu.Unlock()
 	fmt.Println("User stream finished with", req.Uid)
 	return nil
 }
